@@ -1,0 +1,47 @@
+# Python worker Dockerfile
+FROM python:3.11-slim
+
+# Install system dependencies and security tools
+RUN apt-get update && apt-get install -y \
+    nmap \
+    curl \
+    dnsutils \
+    openssl \
+    git \
+    wget \
+    perl \
+    libnet-ssleay-perl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install nikto from source (not available in Debian repos)
+RUN git clone https://github.com/sullo/nikto /opt/nikto && \
+    ln -s /opt/nikto/program/nikto.pl /usr/local/bin/nikto && \
+    chmod +x /opt/nikto/program/nikto.pl
+
+# Install gobuster (detect architecture)
+RUN ARCH=$(dpkg --print-architecture) && \
+    if [ "$ARCH" = "arm64" ] || [ "$ARCH" = "aarch64" ]; then \
+        GOARCH="arm64"; \
+    else \
+        GOARCH="amd64"; \
+    fi && \
+    wget -q https://github.com/OJ/gobuster/releases/download/v3.6.0/gobuster_Linux_${GOARCH}.tar.gz && \
+    tar -xzf gobuster_Linux_${GOARCH}.tar.gz -C /usr/local/bin && \
+    rm gobuster_Linux_${GOARCH}.tar.gz && \
+    chmod +x /usr/local/bin/gobuster
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Default command (run Celery worker)
+CMD ["celery", "-A", "tasks", "worker", "--loglevel=info", "--concurrency=4"]

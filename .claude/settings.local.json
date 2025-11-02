@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(cd:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker run:*)",
+      "Bash(docker compose down:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker exec:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "Bash(cat:*)",
+      "Bash(/tmp/test_quick_scan.sh)",
+      "Bash(chmod:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(for i in 1 2 3 4 5)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(done)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "publicscanner",
+  "version": "1.0.0",
+  "description": "PublicScanner - Security Vulnerability Scanner Platform",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && golangci-lint run",
+    "lint:workers": "cd workers && flake8 . && black --check . && isort --check-only .",
+    "lint": "npm run lint:frontend && npm run lint:backend && npm run lint:workers",
+    "format:frontend": "cd frontend && npm run format",
+    "format:workers": "cd workers && black . && isort .",
+    "format": "npm run format:frontend && npm run format:workers",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && go test ./...",
+    "test:workers": "cd workers && pytest",
+    "test": "npm run test:frontend && npm run test:backend && npm run test:workers"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.6.0",
+    "@commitlint/config-conventional": "^18.6.0",
+    "husky": "^9.0.10"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

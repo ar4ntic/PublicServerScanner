@@ -1,0 +1,82 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Go
+backend/main
+backend/*.exe
+backend/*.exe~
+backend/*.dll
+backend/*.so
+backend/*.dylib
+backend/*.test
+backend/*.out
+backend/vendor/
+backend/go.work
+
+# Node.js / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.DS_Store
+frontend/*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Python
+workers/__pycache__/
+workers/*.py[cod]
+workers/*$py.class
+workers/*.so
+workers/.Python
+workers/venv/
+workers/env/
+workers/ENV/
+workers/*.egg-info/
+workers/dist/
+workers/build/
+workers/.pytest_cache/
+workers/.coverage
+workers/htmlcov/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Reports and data
+/opt/publicscannerdata/
+data/
+reports/
+scans/
+
+# Backup files
+*.bak
+*.backup

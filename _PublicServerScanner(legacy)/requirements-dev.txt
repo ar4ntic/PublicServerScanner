@@ -1,0 +1,41 @@
+# requirements-dev.txt
+
+# Testing
+pytest>=7.0,<8.0
+pytest-mock>=3.10  # for easy mocking of subprocess, os, etc.
+pytest-cov>=4.0    # coverage reporting
+
+# Linting & Static Analysis
+flake8>=6.0,<7.0
+# Optional flake8 plugins
+flake8-bugbear>=23.0
+flake8-docstrings>=1.7  # enforce docstring conventions
+
+mypy>=1.0,<2.0       # optional static type checking
+pylint>=2.15,<3.0    # deeper code analysis
+
+# Formatting & Imports
+black>=24.0,<25.0
+isort>=6.0,<7.0
+
+# Pre-commit hooks
+pre-commit>=3.0,<4.0
+
+# Other utilities
+tox>=4.0,<5.0        # local automation of testing matrix
+coverage>=7.0,<8.0   # for coverage HTML reports
+bandit>=1.7,<2.0     # security analysis
+safety>=2.0,<3.0    # check for insecure packages
+# Documentation
+sphinx>=7.0,<8.0
+sphinx-autodoc-typehints>=1.20  # for type hints in docs
+sphinx-rtd-theme>=1.2  # Read the Docs theme
+sphinxcontrib-plantuml>=0.3  # for UML diagrams in docs
+# Optional: Jupyter Notebook support
+nbconvert>=7.0,<8.0  # for converting notebooks to other formats
+# Optional: Coverage reporting
+coverage>=7.0,<8.0  # for coverage reporting
+# Optional: Code quality tools
+pylint>=2.15,<3.0  # for code quality checks
+# Optional: Type checking
+mypy>=1.0,<2.0  # for static type checking
