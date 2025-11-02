@@ -54,17 +54,21 @@ def headers_check(target: str, config: Dict[str, Any]) -> Dict[str, Any]:
             }
 
         headers = {}
+        headers_lower = {}
         missing_headers = []
 
         # Parse headers
         for line in result.stdout.split('\n'):
             if ':' in line:
                 key, value = line.split(':', 1)
-                headers[key.strip()] = value.strip()
+                key_stripped = key.strip()
+                headers[key_stripped] = value.strip()
+                # Store lowercase version for case-insensitive lookup
+                headers_lower[key_stripped.lower()] = value.strip()
 
-        # Check for security headers
+        # Check for security headers (case-insensitive)
         for header in SECURITY_HEADERS:
-            if header not in headers:
+            if header.lower() not in headers_lower:
                 missing_headers.append(header)
 
         findings_count = len(missing_headers)
@@ -77,12 +81,15 @@ def headers_check(target: str, config: Dict[str, Any]) -> Dict[str, Any]:
         else:
             severity = 'info'
 
+        # Get server header (case-insensitive)
+        server = headers.get('Server') or headers.get('server') or 'unknown'
+
         return {
             'status': 'success',
             'data': {
                 'headers_present': headers,
                 'missing_headers': missing_headers,
-                'server': headers.get('Server', 'unknown')
+                'server': server
             },
             'findings': findings_count,
             'severity': severity

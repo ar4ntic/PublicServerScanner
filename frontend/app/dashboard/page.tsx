@@ -24,14 +24,36 @@ export default function DashboardPage() {
   const [scans, setScans] = useState<Scan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Fetch scan history on mount
   useEffect(() => {
-    fetchScans();
+    fetchScans(true);
   }, []);
 
-  const fetchScans = async () => {
+  // Auto-refresh when there are running/queued scans
+  useEffect(() => {
+    const hasActiveScans = scans.some(
+      (scan) => scan.status === "running" || scan.status === "queued"
+    );
+
+    if (hasActiveScans) {
+      const interval = setInterval(() => {
+        fetchScans(false); // Silent refresh
+      }, 3000); // Refresh every 3 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [scans]);
+
+  const fetchScans = async (showLoading = false) => {
     try {
+      if (showLoading) {
+        setLoading(true);
+      } else {
+        setIsRefreshing(true);
+      }
+
       const token = localStorage.getItem("access_token");
       if (!token) {
         router.push("/login");
@@ -64,7 +86,11 @@ export default function DashboardPage() {
       console.error("Error fetching scans:", err);
       setError("Failed to load scan history");
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      } else {
+        setIsRefreshing(false);
+      }
     }
   };
 
@@ -129,12 +155,9 @@ export default function DashboardPage() {
 
       const newScan = JSON.parse(responseText);
 
-      // Add to scans list
+      // Add to scans list at the top
       setScans([newScan, ...scans]);
       setSearchUrl("");
-
-      // Optionally redirect to scan details
-      // router.push(`/dashboard/scans/${newScan.id}`);
     } catch (err: any) {
       console.error("Error starting scan:", err);
       setError(err.message || "Failed to start scan");
@@ -190,7 +213,15 @@ export default function DashboardPage() {
       <div className="space-y-8">
         {/* Page header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Quick Scan</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-gray-900">Quick Scan</h1>
+            {isRefreshing && (
+              <span className="text-xs text-blue-600 flex items-center gap-1">
+                <Loader className="w-3 h-3 animate-spin" />
+                Updating...
+              </span>
+            )}
+          </div>
           <p className="mt-2 text-gray-600">
             Enter any URL to start scanning for vulnerabilities
           </p>
